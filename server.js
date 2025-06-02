@@ -32,10 +32,10 @@ db.connect((err) => {
 
 // API: Create Incident
 app.post('/api/incidents', (req, res) => {
-  const { type, description, severity, location } = req.body;
+  const { type, description, severity, location, date } = req.body;
 
   const sql = 'INSERT INTO incidents (type, description, severity, location) VALUES (?, ?, ?, ?)';
-  db.query(sql, [type, description, severity, location], (err, result) => {
+  db.query(sql, [type, description, severity, location, date], (err, result) => {
     if (err) {
       console.error('Insert error:', err);
       res.status(500).send('Database error');
