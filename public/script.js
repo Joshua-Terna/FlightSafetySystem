@@ -10,7 +10,7 @@ document.getElementById('incidentForm').addEventListener('submit', function (e) 
     fetch('http://localhost:5000/api/incidents', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, description, severity, location })
+      body: JSON.stringify({ type, description, severity, location, reported_at })
     })
     .then(response => response.json())
     .then(data => {
@@ -29,7 +29,7 @@ document.getElementById('incidentForm').addEventListener('submit', function (e) 
         incidentList.innerHTML = '';  // Clear current list
         incidents.forEach(incident => {
           const li = document.createElement('li');
-          li.textContent = `Type: ${incident.type}, Severity: ${incident.severity}, Location: ${incident.location}`;
+          li.textContent = `Type: ${incident.type}, Severity: ${incident.severity}, Location: ${incident.location}, Reported: ${incident.reported_at}`;
           incidentList.appendChild(li);
         });
       })
