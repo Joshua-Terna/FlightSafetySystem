@@ -3,21 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flight Incident Report</title>
+  <title>Incident Reporting – NCAA</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+    header {
+      background-color: #0a3d62;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    form {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    form h2 {
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 1rem;
+      background-color: #0a3d62;
+      color: white;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #07406f;
+    }
+    #successMessage {
+      color: green;
+      margin-top: 1rem;
+    }
+    #incidentList {
+      margin-top: 3rem;
+    }
+    .incident-card {
+      background-color: white;
+      border-left: 4px solid #0a3d62;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
 <body>
-  <h1>Report an Incident</h1>
-  <form id="incidentForm">
-    <input type="text" id="type" placeholder="Incident Type" required /><br />
-    <textarea id="description" placeholder="Incident Description" required></textarea><br />
-    <input type="text" id="severity" placeholder="Severity" required /><br />
-    <input type="text" id="location" placeholder="Location" /><br />
-    <button type="submit">Submit Incident</button>
-  </form>
+  <header>
+    <h1>NCAA Incident Reporting</h1>
+  </header>
+  <main>
+    <form id="incidentForm">
+      <h2>Report a New Incident</h2>
+      <label for="type">Incident Type</label>
+      <input type="text" id="type" required />
 
-  <h2>All Incidents</h2>
-  <ul id="incidentList"></ul>
+      <label for="description">Description</label>
+      <textarea id="description" rows="4" required></textarea>
 
-  <script src="script.js"></script>
+      <label for="severity">Severity</label>
+      <select id="severity" required>
+        <option value="">-- Select --</option>
+        <option value="Low">Low</option>
+        <option value="Moderate">Moderate</option>
+        <option value="High">High</option>
+      </select>
+
+      <label for="location">Location</label>
+      <input type="text" id="location" required />
+
+      <button type="submit">Submit Incident</button>
+      <div id="successMessage"></div>
+    </form>
+
+    <section id="incidentList">
+      <h2>All Reported Incidents</h2>
+      <div id="incidentCards"></div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('incidentForm');
+    const successMessage = document.getElementById('successMessage');
+    const cards = document.getElementById('incidentCards');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const incident = {
+        type: document.getElementById('type').value.trim(),
+        description: document.getElementById('description').value.trim(),
+        severity: document.getElementById('severity').value,
+        location: document.getElementById('location').value.trim()
+      };
+
+      const response = await fetch('/api/incidents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(incident)
+      });
+
+      if (response.ok) {
+        successMessage.textContent = 'Incident submitted successfully.';
+        form.reset();
+        loadIncidents();
+      } else {
+        successMessage.textContent = 'Error submitting incident.';
+        successMessage.style.color = 'red';
+      }
+
+      setTimeout(() => { successMessage.textContent = ''; }, 3000);
+    });
+
+    async function loadIncidents() {
+      const res = await fetch('/api/incidents');
+      const data = await res.json();
+
+      cards.innerHTML = '';
+      data.reverse().forEach(inc => {
+        const div = document.createElement('div');
+        div.className = 'incident-card';
+        div.innerHTML = `
+          <strong>Type:</strong> ${inc.type}<br />
+          <strong>Severity:</strong> ${inc.severity}<br />
+          <strong>Location:</strong> ${inc.location}<br />
+          <strong>Description:</strong><br />${inc.description}
+        `;
+        cards.appendChild(div);
+      });
+    }
+
+    loadIncidents();
+  </script>
 </body>
 </html>
