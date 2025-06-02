@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flight Incident Report</title>
+</head>
+<body>
+  <h1>Report an Incident</h1>
+  <form id="incidentForm">
+    <input type="text" id="type" placeholder="Incident Type" required /><br />
+    <textarea id="description" placeholder="Incident Description" required></textarea><br />
+    <input type="text" id="severity" placeholder="Severity" required /><br />
+    <input type="text" id="location" placeholder="Location" /><br />
+    <button type="submit">Submit Incident</button>
+  </form>
+
+  <h2>All Incidents</h2>
+  <ul id="incidentList"></ul>
+
+  <script src="script.js"></script>
+</body>
+</html>
