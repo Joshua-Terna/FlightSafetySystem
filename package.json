@@ -1,14 +1,14 @@
 {
   "name": "flightsafetysystem",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Flight safety incident reporting system",
   "dependencies": {
     "body-parser": "^1.20.3",
     "dotenv": "^16.4.5",
