@@ -96,7 +96,7 @@
       <label for="location">Location</label>
       <input type="text" id="location" required />
 
-      <label for="date">Date</label>
+      <label for="reported_at">Reported</label>
       <input type="date" id="date" required />
 
       <button type="submit">Submit Incident</button>
@@ -122,7 +122,7 @@
         description: document.getElementById('description').value.trim(),
         severity: document.getElementById('severity').value,
         location: document.getElementById('location').value.trim(),
-        date: document.getElementById('date').value
+        date: document.getElementById('reported_at').value
       };
 
       const response = await fetch('/api/incidents', {
@@ -156,7 +156,7 @@
           <strong>Type:</strong> ${inc.type}<br />
           <strong>Severity:</strong> ${inc.severity}<br />
           <strong>Location:</strong> ${inc.location}<br />
-          <strong>Date:</strong> ${inc.date}<br />
+          <strong>Reported:</strong> ${inc.date}<br />
           <strong>Description:</strong><br />${inc.description}
         `;
         cards.appendChild(div);
