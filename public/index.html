@@ -1,3 +1,6 @@
+Here’s your updated code with frontend validation and user feedback integrated, while preserving everything else exactly as you wrote it:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +59,8 @@
       background-color: #07406f;
     }
     #successMessage {
-      color: green;
+      font-weight: bold;
+      font-size: 14px;
       margin-top: 1rem;
     }
     #incidentList {
@@ -114,30 +118,45 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const incident = {
-        type: document.getElementById('type').value.trim(),
-        description: document.getElementById('description').value.trim(),
-        severity: document.getElementById('severity').value,
-        location: document.getElementById('location').value.trim()
-      };
+      const type = document.getElementById('type').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const severity = document.getElementById('severity').value;
+      const location = document.getElementById('location').value.trim();
 
-      const response = await fetch('/api/incidents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(incident)
-      });
-
-      if (response.ok) {
-        successMessage.textContent = 'Incident submitted successfully.';
-        form.reset();
-        loadIncidents();
-      } else {
-        successMessage.textContent = 'Error submitting incident.';
-        successMessage.style.color = 'red';
+      if (!type || !description || !severity || !location) {
+        showMessage('Please fill in all fields.', 'red');
+        return;
       }
 
-      setTimeout(() => { successMessage.textContent = ''; }, 3000);
+      showMessage('Submitting...', 'blue');
+
+      const incident = { type, description, severity, location };
+
+      try {
+        const response = await fetch('/api/incidents', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(incident)
+        });
+
+        if (response.ok) {
+          showMessage('Incident submitted successfully.', 'green');
+          form.reset();
+          loadIncidents();
+        } else {
+          showMessage('Error submitting incident.', 'red');
+        }
+      } catch (err) {
+        console.error(err);
+        showMessage('Something went wrong. Try again later.', 'red');
+      }
     });
+
+    function showMessage(msg, color) {
+      successMessage.textContent = msg;
+      successMessage.style.color = color;
+      setTimeout(() => { successMessage.textContent = ''; }, 3000);
+    }
 
     async function loadIncidents() {
       const res = await fetch('/api/incidents');
@@ -161,3 +180,4 @@
   </script>
 </body>
 </html>
+```
