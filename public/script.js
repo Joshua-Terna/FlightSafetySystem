@@ -5,7 +5,7 @@ document.getElementById('incidentForm').addEventListener('submit', function (e) 
     const description = document.getElementById('description').value;
     const severity = document.getElementById('severity').value;
     const location = document.getElementById('location').value;
-    const reported_at = document.getElementById('reported_at')
+    const reported_at = document.getElementById('reported_at').value;
   
     fetch('http://localhost:5000/api/incidents', {
       method: 'POST',
